@@ -13,8 +13,20 @@
 #include <numeric>
 using namespace std;
 //////////////////////////global  methods///////////////////////
-void getaLine(string& inStr);   // get line of text
-char getaChar();                // get a character
+void getaLine(string& inStr)    // get line of text
+{
+	char temp[21];
+	cin.get(temp, 20, '\n');
+	cin.ignore(20, '\n');
+	inStr = temp;
+}
+//--------------------------------------------------------------
+char getaChar()                 // get a character
+{
+	char ch = cin.get();
+	cin.ignore(80, '\n');
+	return ch;
+}
 ///////////////////////////class tenant/////////////////////////
 class tenant
 {
@@ -23,12 +35,21 @@ private:
     int aptNumber;  // tenant’s apartment number
     // other tenant information (phone, etc.) could go here
 public:
-    tenant(string n, int aNo);
-    ~tenant();
-    int getAptNumber();
+	tenant(string n, int aNo) {
+		this->name = n;
+		this->aptNumber = aNo;
+	}
+	~tenant() {}
+	int getAptNumber() {
+		return this->aptNumber;
+	}
     // needed for use in ‘set’
-    friend bool operator < (const tenant&, const tenant&);
-    friend bool operator == (const tenant&, const tenant&);
+	friend bool operator < (const tenant& t1, const tenant& t2) {
+		return t1.name < t2.name;
+	}
+	friend bool operator == (const tenant& t1, const tenant& t2) {
+		return t1.name == t2.name
+	}
     // for I/O
     friend ostream& operator << (ostream&, const tenant&);
 };  // end class tenant
@@ -71,12 +92,25 @@ private:
     int aptNo;
     float rent[12];
 public:
-    rentRow(int);
-    void setRent(int, float);
-    float getSumOfRow();
+	rentRow(int num) {
+		this->aptNo = num;
+	}
+	void setRent(int num, float price) {
+		this->rent[num] = price;
+	}
+	float getSumOfRow() {
+		float sum = 0.0;
+		for (int i = 0; i < 12; i++)
+			sum += this->rent[i];
+		return sum;
+	}
     // needed to store in ‘set’
-    friend bool operator < (const rentRow&, const rentRow&);
-    friend bool operator == (const rentRow&, const rentRow&);
+	friend bool operator < (const rentRow& r1, const rentRow& r2) {
+		return r1.aptNo < r2.aptNo;
+	}
+	friend bool operator == (const rentRow& r1, const rentRow& r2) {
+		return r1.aptNo == r2.aptNo;
+	}
     // for output
     friend ostream& operator << (ostream&, const rentRow&);
 };  // end class rentRow
@@ -197,4 +231,3 @@ public:
 //////////////////////////end file landlord.h//////////////////////
 
 #endif //LANDLORDPROJECT_LANDLORD_H
-
